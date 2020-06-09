@@ -1,0 +1,138 @@
+﻿@{
+    ViewBag.Title = "Home";
+    //Layout = null;
+}
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script src="sweetalert2.all.min.js"></script>
+<!-- Optional: include a polyfill for ES6 Promises for IE11 -->
+@*<script src="https://cdn.jsdelivr.net/npm/promise-polyfill"></script>*@
+<script src="sweetalert2.min.js"></script>
+<link rel="stylesheet" href="sweetalert2.min.css">
+
+<div style="text-align:center">
+    <h2>Service ASMX - ASP .Net MVC</h2>
+</div>
+
+<div style="margin-top:100px">
+    <h3>Fibonacci</h3>
+    <hr />
+    <div class="col-md-12 row">
+        <div class="col-md-4">
+            Saisie du chiffre :
+            <br />
+            <small><i>Montant entre 0 et 93</i></small>
+        </div>
+        <div class="col-md-4">
+            <input class="form-control" type="text" id="fiboNumber" name="fiboNumber" />
+        </div>
+        <div class="col-md-4">
+            <input class="form-control btn-primary" type="button" value="Envoyer" onclick="callServiceFibonacci()" />
+        </div>
+    </div>
+</div>
+
+
+<div style="margin-top:150px">
+    <h3>XML to Json</h3>
+    <hr />
+    <div class="col-md-12 row">
+        <div class="col-md-4">Saisie de code XML :</div>
+        <div class="col-md-4">
+            <textarea class="form-control" id="xmlJsonText" name="xmlJsonText" rows="5" cols="33"></textarea>
+        </div>
+        <div class="col-md-4">
+            <input class="form-control btn-primary" type="button" onclick="callServiceXmlToJson()" value="Envoyer" />
+        </div>
+    </div>
+</div>
+
+
+<div style="margin-top:250px">
+    <h3>Résultats</h3>
+    <hr />
+    <div class="col-md-12 row">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <div id="divToReplace"></div>
+        </div>
+        <div class="col-md-4"></div>
+    </div>
+</div>
+
+
+
+@*<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>*@
+
+<script>
+
+    function callServiceFibonacci() {
+
+        Swal.fire({
+            title: "CHARGEMENT",
+            html: "Veuillez patienter quelques secondes",
+
+            timerProgressBar: false,
+            onBeforeOpen: () => {
+                Swal.showLoading()
+            },
+            allowOutsideClick: false
+
+        });
+
+        setTimeout(() => {
+            Swal.close();
+            $.ajax({
+                url: '@Url.Action("CallFibonacci", "Home", new { area = ""})',
+                data: {
+                    value: document.getElementById("fiboNumber").value
+                },
+                type: 'POST',
+                success: function (result) {
+                    document.getElementById("divToReplace").innerHTML = result.message;
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    document.getElementById("divToReplace").innerHTML = "Error";
+                }
+            });
+        }, 2000);
+    };
+
+
+    function callServiceXmlToJson() {
+
+        Swal.fire({
+            title: "CHARGEMENT",
+            html: "Veuillez patienter quelques secondes",
+
+            timerProgressBar: false,
+            onBeforeOpen: () => {
+                Swal.showLoading()
+            },
+            allowOutsideClick: false
+
+        });
+
+        setTimeout(() => {
+            Swal.close();
+            $.ajax({
+                url: '@Url.Action("CallXmlToJson", "Home", new { area = ""})',
+                data: {
+                    value: document.getElementById("xmlJsonText").value
+                },
+                type: 'POST',
+                success: function (result) {
+                    document.getElementById("divToReplace").innerHTML = result.message;
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    document.getElementById("divToReplace").innerHTML = thrownError;
+                    //document.getElementById("divToReplace").innerHTML = "Error 2";
+                }
+            });
+        }, 2000);
+    };
+
+
+</script>
+
+
